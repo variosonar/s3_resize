@@ -1,0 +1,39 @@
+name: Dev
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    types: [closed]
+    branches:
+      - dev
+  workflow_dispatch:
+
+env:
+  DOCKER_IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  build:
+    runs-on: [self-hosted, cdn, dev]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build image
+        run: docker compose -f docker-compose.yml build --force-rm
+  
+  deploy:
+    needs: [build]
+    runs-on: [self-hosted, cdn, dev]
+    environment: dev
+    steps:
+      - name: Run services
+        env:
+          API_LISTEN: ${{ vars.LISTEN }}
+          THREADS: ${{ vars.THREADS }}
+          S3_ENDPOINT_URL: ${{ vars.S3_ENDPOINT_URL }}
+          S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+          S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+          S3_REGION: ${{ vars.S3_REGION }}
+          S3_FORCE_PATH_STYLE: ${{ vars.S3_FORCE_PATH_STYLE }}
+          S3_BUCKET: ${{ vars.S3_BUCKET }}
+        run: docker compose -f docker-compose.yml -p dev up -d --no-build --remove-orphans

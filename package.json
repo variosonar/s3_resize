@@ -1,0 +1,26 @@
+{
+  "name": "image-resize-s3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creativepropulsionlabs/image-resize-s3.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/creativepropulsionlabs/image-resize-s3/issues"
+  },
+  "homepage": "https://github.com/creativepropulsionlabs/image-resize-s3#readme",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.395.0",
+    "dotenv": "^16.3.1",
+    "log4js": "^6.9.1",
+    "sharp": "^0.32.5"
+  }
+}

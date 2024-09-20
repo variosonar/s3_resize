@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  image-resize-s3:
+    image: "image-resize-s3:${DOCKER_IMAGE_TAG:-latest}"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "--max-old-space-size=512", "src/index.js"]
+    expose:
+      - "3000"
+    restart: unless-stopped
+    ports:
+      - "${API_LISTEN:-127.0.0.1:3000}:3000"
+    environment:
+      NODE_ENV: "${NODE_ENV:-production}"
+      LISTEN: 0.0.0.0
+      PORT: 3000
+      THREADS: ${THREADS:-1}
+      LOG_LEVEL: "${LOG_LEVEL}"
+      S3_ENDPOINT_URL: "${S3_ENDPOINT_URL}"
+      S3_ACCESS_KEY_ID: "${S3_ACCESS_KEY_ID}"
+      S3_SECRET_ACCESS_KEY: "${S3_SECRET_ACCESS_KEY}"
+      S3_REGION: "${S3_REGION}:-xxx"
+      S3_FORCE_PATH_STYLE: "${S3_FORCE_PATH_STYLE:-NO}"
+      S3_BUCKET:  "${S3_BUCKET}"
+    stop_grace_period: 60s
